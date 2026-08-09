@@ -1,63 +1,47 @@
 from turtle import Turtle
 
-class Paddle:
+class Paddle(Turtle):
 
-    def __init__(self,color:str="white"):
-        #super().__init__()   
-        #self.color(color)
-        self.listSegments:list[Turtle]=[]
+    def __init__(self,screenWidth:int,screenHeight:int):
+        super().__init__()  
+        self.screenWidth=screenWidth 
+        self.screenHeight=screenHeight
 
 
-
-    def createPaddle(self,side:str,screenWidth:int,color:str="white"):
+    def createPaddle(self,side:str,color:str="white"):
         """Create a new paddle. On the left or right side"""
-        yPosition=-20
-        xPosition=(screenWidth/2) -40
+        yPosition=0
+        xPosition=(self.screenWidth/2) -40
         if side =="left":
             xPosition*=-1
         else:
             pass
 
+         
+        self.color(color)
+        self.penup()
+        self.shape("square")
+        self.shapesize(stretch_wid=5,stretch_len=1)
+        self.goto(xPosition,yPosition)
+        
+     
 
-        for i in range(5):
-            segment=Turtle()
-            segment.color(color)
-            segment.penup()
-            segment.shape("square")
-            segment.goto(xPosition,yPosition)
-            yPosition+=20
-            self.listSegments.append(segment)
-            
-
-    def movePaddle(self,direction:str):
+    def moveUP(self):
         """Move the paddle Up or Down in 20 units."""
-        angle=0
-        if direction.lower() =="up":
-            angle=90
-            startPoint=0
-            endPoint=len(self.listSegments)-1
-            step=1
-            #rangeTuple=(0,len(self.listSegments)-1,1)
-            
+      
+        ycor=self.ycor()
+        maxHeight=(self.screenHeight/2)-80
+        if ycor < maxHeight:   
+            newYcor=ycor+20
+            self.sety(newYcor)
+        
 
-        else:
-            angle=270
-            startPoint=len(self.listSegments)-1
-            endPoint=0
-            step=-1
-            #rangeTuple=(len(self.listSegments)-1,0,-1)
+    def moveDown(self):
+        """Move the paddle Down in 20 units."""
 
-
-
-
-        for index in range(startPoint,endPoint,step):
-            newX=self.listSegments[index+step].xcor()
-            newY=self.listSegments[index+step].ycor()
-            #self.listSegments[index].setheading(angle)
-            self.listSegments[index].speed(10)
-            print(f"Index:{index} \n newX:{newX}  newY:{newY}")
-            self.listSegments[index].goto(newX,newY)
-
-        self.listSegments[endPoint].setheading(angle)
-        self.listSegments[endPoint].forward(20)
-        print("------------------")
+        ycor=self.ycor()
+        maxHeight= -(self.screenHeight/2)+80
+        if ycor > maxHeight:   
+            newYcor=ycor-20
+            self.sety(newYcor)
+  

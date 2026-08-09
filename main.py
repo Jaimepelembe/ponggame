@@ -41,55 +41,21 @@ configureScreen(screenWidth,screenHeight,screen)
 separator=SideSeparator(screenHeight)
 separator.drawSeparator()
 
-paddleLeft = Paddle()
-paddleLeft.createPaddle("left",screenWidth)
-paddleRight = Paddle()
-paddleRight.createPaddle("right",screenWidth)
-
-def moveRightPaddleUp():
-    """Move the Right Paddle Up in 20 units. Until it touches the upper line"""
-    index=len(paddleRight.listSegments)-1
-    maxHeight=(screenHeight/2)-20
-    ycor=paddleRight.listSegments[index].ycor()
-    if ycor<=maxHeight:
-        paddleRight.movePaddle("up")
+paddleLeft = Paddle(screenWidth,screenHeight)
+paddleLeft.createPaddle("left")
+paddleRight = Paddle(screenWidth,screenHeight)
+paddleRight.createPaddle("right")
 
 
-def moveRightPaddleDown():
-    """Move the Right Paddle Down in 20 units. Until it touches the bottom line"""
-
-    maxHeight= -(screenHeight/2)+20
-    ycor=paddleRight.listSegments[0].ycor()
-    if ycor >= maxHeight:
-        paddleRight.movePaddle("down")
-
-
-
-def moveLeftPaddleUp():
-    """Move the Left Paddle Up in 20 units. Until it touches the upper line"""
-    index=len(paddleLeft.listSegments)-1
-    maxHeight=(screenHeight/2)-20
-    ycor=paddleLeft.listSegments[index].ycor()
-    if ycor<=maxHeight:
-        paddleLeft.movePaddle("up")
-
-
-def moveLeftPaddleDown():
-    """Move the Left Paddle Down in 20 units. Until it touches the bottom line"""
-
-    maxHeight= -(screenHeight/2)+20
-    ycor=paddleLeft.listSegments[0].ycor()
-    if ycor >= maxHeight:
-        paddleLeft.movePaddle("down")
 
 
 #Event listener
 screen.listen()
 screen.onkey(closeWindow,"Escape")
-screen.onkeypress(moveRightPaddleUp,"Up")
-screen.onkeypress(moveRightPaddleDown,"Down")
-screen.onkeypress(moveLeftPaddleUp,"w")
-screen.onkeypress(moveLeftPaddleDown,"s")
+screen.onkeypress(paddleRight.moveUP,"Up")
+screen.onkeypress(paddleRight.moveDown,"Down")
+screen.onkeypress(paddleLeft.moveUP,"w")
+screen.onkeypress(paddleLeft.moveDown,"s")
 #screen.onkeypress()
 #screen.onkey(turnRight,"Right")
 #screen.onkey(turnUp,"Up")
