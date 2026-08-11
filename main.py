@@ -1,10 +1,11 @@
 from turtle import Screen
 from sideSeparator import SideSeparator
-
+from ball import Ball
 from paddle import Paddle
+from scoreboard import ScoreBoard
 import time
 
-
+colisoes=0
 
 
 def closeWindow():
@@ -27,8 +28,34 @@ def configureScreen(screenWidth:int,screenHeight:int,screen:Screen,color:str="bl
     screen.tracer(0) # Turn off the animation
 
 
+def checkCollisionWithWalls(screenHeight:int,ball:Ball):
+    """Check if the ball collided with the top or bottom wall"""
+
+    if ball.ycor() >= (screenHeight/2) -20 or ball.ycor() <= -(screenHeight/2) +20: # We put -20 and +20 because the ball is 20x20
+        ball.bounceY()
 
 
+def checkCollisionWithPaddle(ball:Ball,paddleLeft:Paddle,paddleRight:Paddle):
+    """Check if the ball collided with the paddle"""
+    limite=screenWidth/2 -65 # 335
+    if (ball.distance(paddleRight) < 80 and ball.xcor() >limite and ball.xcor() < limite +10) or (ball.distance(paddleLeft)<80 and ball.xcor() < -limite and ball.xcor() > -limite -10):
+        ball.bounceX()
+    
+        global colisoes
+        print(f"Collided {colisoes+1}")
+        colisoes+=1
+
+def checkPlayerScore(ball:Ball,scoreBoardRight:ScoreBoard,scoreBoardLeft:ScoreBoard):
+    """Check if one of the player has scored one point"""
+
+    limite = (screenWidth/2)
+    if ball.xcor() > limite: #The Right player has scored a point
+        scoreBoardLeft.increaseScore()
+        ball.resetBall()
+
+    elif ball.xcor() < -limite:      #The Left player has scored a point
+        scoreBoardRight.increaseScore()
+        ball.resetBall()
 
 screen=Screen()
 screenWidth=800
@@ -46,8 +73,11 @@ paddleLeft.createPaddle("left")
 paddleRight = Paddle(screenWidth,screenHeight)
 paddleRight.createPaddle("right")
 
-
-
+ball= Ball()
+scoreHeight=screenHeight/2 -80
+font=("verdana",32,"bold")
+scoreBoardLeft=ScoreBoard(-80,scoreHeight,font)
+scoreBoardRight=ScoreBoard(80,scoreHeight,font)
 
 #Event listener
 screen.listen()
@@ -56,17 +86,18 @@ screen.onkeypress(paddleRight.moveUP,"Up")
 screen.onkeypress(paddleRight.moveDown,"Down")
 screen.onkeypress(paddleLeft.moveUP,"w")
 screen.onkeypress(paddleLeft.moveDown,"s")
-#screen.onkeypress()
-#screen.onkey(turnRight,"Right")
-#screen.onkey(turnUp,"Up")
-#screen.onkey(turnDown,"Down")
+
 
 playGame=True
 
 while playGame:
     while True:
-        time.sleep(0) #0.075
+        time.sleep(0.05) #0.075 Make a pause after each movement of the ball
         screen.update()
+        checkCollisionWithWalls(screenHeight,ball)
+        checkCollisionWithPaddle(ball,paddleLeft,paddleRight)
+        checkPlayerScore(ball,scoreBoardLeft,scoreBoardRight)
+        ball.moveBall()
 
 
 
