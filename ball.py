@@ -11,15 +11,13 @@ class Ball(Turtle):
         self.xMove=10
         self.yMove=10
         self.chooseBallOrientation()
+        self.ballSpeed=0.07
 
 
     def chooseBallOrientation(self,interval:tuple=(0,360)):
-        """Choose randomly an angle between 0 and 360 to move the ball."""
+        """Choose randomly an orientation."""
         listAngles=[45,135,225,315]
-        #angle=randint(*interval)
         angle=choice(listAngles)
-        if angle == 0 or angle== 90 or angle == 180 or angle ==270:
-            angle=45
         self.setheading(angle)
 
     def bounceY(self):
@@ -28,20 +26,8 @@ class Ball(Turtle):
 
 
     def bounceX(self):
-        """Makes the ball bounce in the X direction"""
-    
+        """Makes the ball bounce in the X direction"""   
         self.xMove*= -1
-
-
-    #self.xMove*= -1
-
-        """heading=self.heading()
-        if collisionPaddle:
-             angle=heading+180
-        else:     
-            angle=-heading
-
-        self.setheading(angle)"""
 
     def moveBall(self):
         """Move the ball forward"""
@@ -49,11 +35,14 @@ class Ball(Turtle):
         newY=self.ycor()+self.yMove
         self.goto(newX,newY)
 
-        #self.forward(10)
-        #print(self.heading())
-
 
     def resetBall(self):
         """Reset the ball to the initial position (0,0)"""
-
         self.home()
+        self.bounceX()
+        self.ballSpeed=0.07
+
+    def increaseBallSpeed(self):
+        """Increases the speed of the ball"""
+        if self.ballSpeed > 0:
+            self.ballSpeed-= 0.005125#625
