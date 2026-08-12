@@ -3,6 +3,7 @@ from sideSeparator import SideSeparator
 from ball import Ball
 from paddle import Paddle
 from scoreboard import ScoreBoard
+from validationFunctions import inputValidation
 import time
 
 
@@ -56,6 +57,22 @@ def checkPlayerScore(ball:Ball,scoreBoardRight:ScoreBoard,scoreBoardLeft:ScoreBo
         scoreBoardRight.increaseScore()
         ball.resetBall()
 
+
+def checkIfSomeOneWin(scoreBoardRight:ScoreBoard,scoreBoardLeft:ScoreBoard):
+    """"Check if one of the player has win the game. Return True if some one win otherwise False"""
+    if scoreBoardRight.score== maxScore:
+        scoreGameOver.gameOver("Right")
+        return True
+    
+    elif scoreBoardLeft.score== maxScore:
+        scoreGameOver.gameOver("Left")
+        return True
+
+    else:
+        return False
+
+
+    
 screen=Screen()
 screenWidth=800
 screenHeight=600
@@ -73,13 +90,17 @@ paddleRight = Paddle(screenWidth,screenHeight)
 paddleRight.createPaddle("right")
 
 ball= Ball()
+
 scoreHeight=screenHeight/2 -80
 font=("verdana",32,"bold")
 scoreBoardLeft=ScoreBoard(-80,scoreHeight,font)
 scoreBoardRight=ScoreBoard(80,scoreHeight,font)
 
+fontGameOVer=("Arial",18,"bold")
+scoreGameOver=ScoreBoard(0,0,fontGameOVer,text="")
+
 #Event listener
-screen.listen()
+#screen.listen()
 screen.onkey(closeWindow,"Escape")
 screen.onkeypress(paddleRight.moveUP,"Up")
 screen.onkeypress(paddleRight.moveDown,"Down")
@@ -90,18 +111,32 @@ screen.onkeypress(paddleLeft.moveDown,"s")
 playGame=True
 
 while playGame:
+    maxScore=screen.numinput(title="Maximum score",prompt="What is the maximum score?",default=10,minval=3,maxval=100)
+    screen.listen()
     while True:
         time.sleep(ball.ballSpeed) # Make a pause after each movement of the ball
         screen.update()
         checkCollisionWithWalls(screenHeight,ball)
         checkCollisionWithPaddle(ball,paddleLeft,paddleRight)
         checkPlayerScore(ball,scoreBoardLeft,scoreBoardRight)
+        if checkIfSomeOneWin(scoreBoardRight,scoreBoardLeft):
+            break
         ball.moveBall()
 
+    userChoose=inputValidation("Game over", "Do you want to play again? type 'y' or 'n'",['y','n'],screen)   
+
+    if userChoose =="n":
+        playGame=False 
+    else:
+        ball.resetBall()
+        scoreBoardLeft.resetScore()
+        scoreBoardRight.resetScore()
+        scoreGameOver.clear()
+        pass
 
 
 
 
 
-#closeWindow() # Close the screen
+closeWindow() # Close the screen
 screen.mainloop()

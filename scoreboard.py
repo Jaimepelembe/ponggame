@@ -2,7 +2,7 @@ from turtle import Turtle
 
 class ScoreBoard(Turtle):
 
-    def __init__(self,xPosition:int,yPosition:int,font:tuple=('Arial',14,'bold'),color:str="white"):
+    def __init__(self,xPosition:int,yPosition:int,font:tuple=('Arial',14,'bold'),color:str="white",text:str="0"):
         super().__init__()
         self.score=0
         self.color(color)
@@ -11,7 +11,7 @@ class ScoreBoard(Turtle):
         self.setx(xPosition)
         self.sety(yPosition)
         self.font:tuple=font
-        self.writeText(argument=f"{self.score}")
+        self.writeText(argument=text)
   
 
     def writeText(self,argument:str="",move:bool=False,align:str="center"):
@@ -31,14 +31,16 @@ class ScoreBoard(Turtle):
         self.score=0
         self.clear()
         self.color("white")
-        self.createScoreBoard()
+        self.writeText("0")
+        #self.createScoreBoard()
 
-    def gameOver(self,color:str="#FBAF00"):
+    def gameOver(self,position:str,color:str="#FBAF00"):
         """Write game over on the screen"""
         self.goto(0,0)
         self.clear()
+        self.font=('Arial',18,'bold')
         self.color(color)
-        self.writeText(argument=f"Game Over.\n\nYour score: {self.score}\n\nYour record: {self.highScore}",font=('Arial',18,'bold'))
+        self.writeText(argument=f"Game Over.\nThe winner is the {position} player")
 
 
 
